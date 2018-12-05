@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -42,9 +43,13 @@ public class DemoApplication {
     }
 
     @Bean(name = "myDataSource")
-    @ConfigurationProperties(prefix = "my.datasource")
     public DataSource datasource() {
-        return new org.apache.tomcat.jdbc.pool.DataSource();
+        return DataSourceBuilder.create()
+                .username("sa")
+                .password("")
+                .url("jdbc:h2:mem:testdb;DB_CLOSE_ON_EXIT=FALSE")
+                .driverClassName("org.h2.Driver")
+                .build();
     }
 
     @Bean(name = "myTm")
